@@ -1,0 +1,22 @@
+.myGamespace {
+  display: flex;
+  flex-direction: column;
+}
+
+.myChessboard {
+  display: flex;
+  flex-direction: row;
+}
+
+.myChessboard > * {
+  margin: 0 20px;
+}
+
+.myButtons {
+  display: flex;
+  justify-content: center;
+}
+
+.myButtons > * {
+  margin: 20px 20px;
+}
