@@ -1,25 +1,28 @@
 // Setup.
 import React from "react";
 import { Link } from "react-router-dom";
+
+// Styles.
+import Nav from "react-bootstrap/Nav";
 import "../styles/MyNavbar.css";
 
 // Rendering function.
 function MyNavbar(props) {
   return (
-    <div className="myNav">
+    <Nav className="myNav">
       <Link to="/">IronChess</Link>
-      {props.loggedInUser ? (
+      {props.loggedUser ? (
         <>
-          <Link onClick={props.onLogout}>Logout</Link>
-          <Link to="/private-profile">{props.loggedInUser.username}</Link>
+          <Link onClick={props.onLogout}>Log out</Link>
+          <Link to="/private">{props.loggedUser.username}</Link>
         </>
       ) : (
         <>
-          <Link to="/sign-in">Sign in</Link>
-          <Link to="/sign-up">Sign up</Link>
+          <Link to="/signin">Sign in</Link>
+          <Link to="/signup">Sign up</Link>
         </>
       )}
-    </div>
+    </Nav>
   );
 }
 

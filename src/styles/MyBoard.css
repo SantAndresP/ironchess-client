@@ -1,3 +1,4 @@
+/* CSS file for both `MyHumanBoard` and `MyEngineBoard`. */
 .myGamespace {
   display: flex;
   flex-direction: column;

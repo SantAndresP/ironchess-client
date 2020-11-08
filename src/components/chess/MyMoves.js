@@ -1,7 +1,7 @@
 import React from "react";
 
-function MyMoves() {
-  return <div></div>;
+function MyMoves(props) {
+  return <div>{props.moves}</div>;
 }
 
 export default MyMoves;

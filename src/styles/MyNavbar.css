@@ -1,0 +1,11 @@
+.myNav.nav {
+  padding: 20px 0;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  background-color: snow;
+}
+
+.myNav > * {
+  margin: 0 50px;
+}

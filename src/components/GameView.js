@@ -1,12 +1,9 @@
 import React from "react";
+import MyEngineBoard from "./chess/MyEngineBoard";
 import MyHumanBoard from "./chess/MyHumanBoard";
 
 function GameView() {
-  return (
-    <div>
-      <MyHumanBoard />
-    </div>
-  );
+  return <MyEngineBoard />;
 }
 
 export default GameView;

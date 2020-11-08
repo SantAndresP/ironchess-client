@@ -3,115 +3,37 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Switch, Route, withRouter } from "react-router-dom";
 
+// Styles.
+import "../styles/App.css";
+
 // Components
 import MyNavbar from "./MyNavbar";
 import Signin from "./auth/Signin";
 import Signup from "./auth/Signup";
-import GameView from "./GameView";
-import Private from "./user/Private";
+import PrivateProfile from "./user/PrivateProfile";
+import PublicHome from "./home/PublicHome";
+import PrivateHome from "./home/PrivateHome";
 
-// import { API_URL } from "./config";
-
+// Rendering function.
 class App extends Component {
   state = {
-    loggedInUser: null,
+    loggedUser: null,
     errorMessage: null,
   };
 
   componentDidMount() {
-    if (!this.state.loggedInUser) {
+    if (!this.state.loggedUser) {
       axios
         .get(`http://localhost:5000/api/user`, { withCredentials: true })
         .then((res) => {
           this.setState({
-            loggedInUser: res.data,
+            loggedUser: res.data,
           });
         });
     }
-
-    axios.get(`http://localhost:5000/api/todos`).then((response) => {
-      this.setState({
-        todos: response.data,
-      });
-    });
   }
 
-  handleAdd = (e) => {
-    e.preventDefault();
-    const { name, description, image } = e.target;
-    const imageFile = image.files[0];
-
-    const uploadForm = new FormData();
-    uploadForm.append("imageUrl", imageFile);
-
-    axios.post(`http://localhost:5000/api/upload`, uploadForm).then((res) => {
-      console.log(res.data);
-
-      const newTodo = {
-        name: name.value,
-        description: description.value,
-        completed: false,
-        image: res.data.image,
-      };
-
-      axios
-        .post(`http://localhost:5000/api/create`, newTodo)
-        .then((response) => {
-          this.setState(
-            {
-              todos: [response.data, ...this.state.todos],
-            },
-            () => {
-              this.props.history.push("/");
-            }
-          );
-        });
-    });
-  };
-
-  handleDelete = (todoId) => {
-    axios.delete(`http://localhost:5000/api/todos/${todoId}`).then(() => {
-      let filteredTodos = this.state.todos.filter((todo) => {
-        return todo._id !== todoId;
-      });
-
-      this.setState(
-        {
-          todos: filteredTodos,
-        },
-        () => {
-          this.props.history.push("/");
-        }
-      );
-    });
-  };
-
-  handleEdit = (todo) => {
-    axios
-      .patch(`http://localhost:5000/api/todos/${todo._id}`, {
-        name: todo.name,
-        description: todo.description,
-        completed: todo.completed,
-      })
-      .then(() => {
-        let updatedTodos = this.state.todos.map((myTodo) => {
-          if (myTodo._id == todo._id) {
-            myTodo = todo;
-          }
-          return myTodo;
-        });
-
-        this.setState(
-          {
-            todos: updatedTodos,
-          },
-          () => {
-            this.props.history.push("/");
-          }
-        );
-      });
-  };
-
+  // Sign up.
   handleSignup = (e) => {
     e.preventDefault();
 
@@ -130,7 +52,7 @@ class App extends Component {
       .then((res) => {
         this.setState(
           {
-            loggedInUser: res.data,
+            loggedUser: res.data,
           },
           () => {
             this.props.history.push("/");
@@ -139,6 +61,7 @@ class App extends Component {
       });
   };
 
+  // Sign in.
   handleSignin = (e) => {
     e.preventDefault();
 
@@ -146,7 +69,7 @@ class App extends Component {
 
     axios
       .post(
-        `http://localhost:5000/api/Signin`,
+        `http://localhost:5000/api/signin`,
         {
           email: email.value,
           password: password.value,
@@ -156,7 +79,7 @@ class App extends Component {
       .then((res) => {
         this.setState(
           {
-            loggedInUser: res.data,
+            loggedUser: res.data,
           },
           () => {
             this.props.history.push("/");
@@ -171,16 +94,18 @@ class App extends Component {
       });
   };
 
-  handleLogOut = (e) => {
+  // Log out.
+  handleLogout = (e) => {
     axios
       .post(`http://localhost:5000/api/logout`, {}, { withCredentials: true })
       .then(() => {
         this.setState({
-          loggedInUser: null,
+          loggedUser: null,
         });
       });
   };
 
+  // Unmounts error message.
   handleUnmount = () => {
     this.setState({
       errorMessage: null,
@@ -188,32 +113,28 @@ class App extends Component {
   };
 
   render() {
-    const { loggedInUser, errorMessage } = this.state;
+    const { loggedUser, errorMessage } = this.state;
 
     return (
       <div className="myApp">
         <header>
-          <MyNavbar loggedInUser={loggedInUser} onLogout={this.handleLogOut} />
+          <MyNavbar loggedUser={loggedUser} onLogout={this.handleLogout} />
         </header>
 
         <main>
-          {loggedInUser ? <UserCard loggedInUser={loggedInUser} /> : null}
-
-          {/* Chessboard. */}
-          <GameView />
-
-          <button>Look for a game.</button>
-          <button>1 min</button>
-          <button>3 min</button>
-          <button>5 min</button>
-          <button>10 min</button>
-          <button>15 min</button>
-          <button>60 min</button>
-
           <Switch>
+            {/* Public or Private homepage. */}
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return !loggedUser ? <PublicHome /> : <PrivateHome />;
+              }}
+            />
+
             {/* Sign in. */}
             <Route
-              path="/sign-in"
+              path="/signin"
               render={(routeProps) => {
                 return (
                   <Signin
@@ -228,17 +149,41 @@ class App extends Component {
 
             {/* Sign up. */}
             <Route
-              path="/sign-up"
+              path="/signup"
               render={(routeProps) => {
-                return <Signup onSignUp={this.handleSignUp} {...routeProps} />;
+                return <Signup onSignup={this.handleSignup} {...routeProps} />;
               }}
             />
 
             {/* Private profile. */}
             <Route
-              path="/private-profile"
+              path="/private"
               render={() => {
-                return <Private loggedInUser={loggedInUser} />;
+                return <PrivateProfile loggedUser={loggedUser} />;
+              }}
+            />
+
+            {/* Public profile. */}
+            <Route
+              path="/public/:id"
+              render={() => {
+                return <PrivateProfile loggedUser={loggedUser} />;
+              }}
+            />
+
+            {/* Private game. */}
+            <Route
+              path="/game/:id"
+              render={() => {
+                return <PrivateGame loggedUser={loggedUser} />;
+              }}
+            />
+
+            {/* Public game. */}
+            <Route
+              path="/game/:id"
+              render={() => {
+                return <PublicGame loggedUser={loggedUser} />;
               }}
             />
           </Switch>

@@ -1,3 +1,5 @@
+/*    Human vs. Human    */
+
 // Setup.
 import React, { Component } from "react";
 import PropTypes from "prop-types";
@@ -6,6 +8,7 @@ import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
 import MyMoves from "./MyMoves";
 
+// Styles.
 import "../../styles/MyBoard.css";
 
 // Move validation class.
@@ -37,6 +40,7 @@ class HumanVsHuman extends Component {
 
   componentDidUpdate() {
     this.moves = this.game.pgn();
+
     if (this.game.turn() === "w") {
       this.turn = "White to move.";
     } else {
