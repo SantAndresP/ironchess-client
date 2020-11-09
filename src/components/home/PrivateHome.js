@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // Styles.
 import { Button } from "react-bootstrap";
@@ -9,12 +10,12 @@ function PrivateHome(props) {
     <div className="myPrivateHome">
       {/* Select time control */}
       <div className="myTimeButtons">
-        <Button onClick={props.onStockfish} size="lg" variant="dark">
-          Computer
+        <Button size="lg" variant="dark">
+          <Link to="/stockfish">Stockfish</Link>
         </Button>
 
         <Button size="lg" variant="light">
-          Random
+          <Link to="/game">Timeless</Link>
         </Button>
 
         <Button size="lg" variant="danger">

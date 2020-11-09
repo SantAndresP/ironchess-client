@@ -22,9 +22,7 @@ function Signin(props) {
       <button type="submit">Submit</button>
 
       {/*    In case of error.    */}
-      {props.errorMessage ? (
-        <p style={{ color: "red" }}>{props.errorMessage}</p>
-      ) : null}
+      {props.errorMsg ? <p style={{ color: "red" }}>{props.errorMsg}</p> : null}
     </form>
   );
 }

@@ -9,7 +9,6 @@ import MyMoves from "./MyMoves";
 // Styles.
 import "../../styles/MyBoard.css";
 import { Button } from "react-bootstrap";
-import { withRouter } from "react-router-dom";
 
 // Move validation function.
 function HumanVsHuman(props) {
@@ -74,6 +73,7 @@ function HumanVsHuman(props) {
     setMovesPGN(game.pgn());
     setSquareStyles(squareStyling({ pieceSquare, history }));
     game.turn() === "w" ? setTurn("White to move.") : setTurn("Black to move.");
+    console.log(game.history());
   };
 
   const handleMouseOverSquare = (square) => {
@@ -144,53 +144,59 @@ function HumanVsHuman(props) {
   });
 }
 
-function MyHumanBoard() {
+function MyHumanBoard2() {
+  const handleResign = () => {};
+
   return (
-    <HumanVsHuman>
-      {({
-        position,
-        handleDrop,
-        handleMouseOverSquare,
-        handleMouseOutSquare,
-        handleSquareClick,
-        handleSquareRightClick,
-        handleDragOverSquare,
-        squareStyles,
-        dropSquareStyle,
-        moves,
-        turn,
-      }) => (
-        <div className="myChessboard">
-          <Chessboard
-            id="HumanVsHuman"
-            width={560}
-            position={position}
-            onDrop={handleDrop}
-            onMouseOverSquare={handleMouseOverSquare}
-            onMouseOutSquare={handleMouseOutSquare}
-            onSquareClick={handleSquareClick}
-            onSquareRightClick={handleSquareRightClick}
-            onDragOverSquare={handleDragOverSquare}
-            squareStyles={squareStyles}
-            dropSquareStyle={dropSquareStyle}
-            boardStyle={{
-              borderRadius: "5px",
-              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-            }}
-          />
+    <div className="myGamespace">
+      <HumanVsHuman>
+        {({
+          position,
+          handleDrop,
+          handleMouseOverSquare,
+          handleMouseOutSquare,
+          handleSquareClick,
+          handleSquareRightClick,
+          handleDragOverSquare,
+          squareStyles,
+          dropSquareStyle,
+          moves,
+          turn,
+        }) => (
+          <div className="myChessboard">
+            <Chessboard
+              id="HumanVsHuman"
+              width={560}
+              position={position}
+              onDrop={handleDrop}
+              onMouseOverSquare={handleMouseOverSquare}
+              onMouseOutSquare={handleMouseOutSquare}
+              onSquareClick={handleSquareClick}
+              onSquareRightClick={handleSquareRightClick}
+              onDragOverSquare={handleDragOverSquare}
+              squareStyles={squareStyles}
+              dropSquareStyle={dropSquareStyle}
+              boardStyle={{
+                borderRadius: "5px",
+                boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+              }}
+            />
 
-          <div className="myButtons">
-            <Button>Resign</Button>
-            <Button>Offer draw</Button>
-            <Button>Save game</Button>
+            <MyMoves moves={moves} turn={turn}></MyMoves>
           </div>
+        )}
+      </HumanVsHuman>
 
-          <MyMoves moves={moves} turn={turn}></MyMoves>
-        </div>
-      )}
-    </HumanVsHuman>
+      <div className="myButtons">
+        <Button onClick={handleResign}>Resign</Button>
+        <Button>Offer draw</Button>
+        <Button>Save game</Button>
+      </div>
+    </div>
   );
 }
+
+export default MyHumanBoard2;
 
 // Square styling.
 const squareStyling = ({ pieceSquare, history }) => {
@@ -211,5 +217,3 @@ const squareStyling = ({ pieceSquare, history }) => {
     }),
   };
 };
-
-export default withRouter(MyHumanBoard);

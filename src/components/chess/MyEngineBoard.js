@@ -5,10 +5,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
+import MyMoves from "./MyMoves";
 
 // Styles.
 import "../../styles/MyBoard.css";
-import MyMoves from "./MyMoves";
+import { Button } from "react-bootstrap";
+
+const boardStyle = {
+  borderRadius: "5px",
+  boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+};
 
 const STOCKFISH = window.STOCKFISH;
 
@@ -45,39 +51,9 @@ class HumanVsStockfish extends Component {
     } else {
       this.turn = "Black to move.";
     }
-
     console.log(this.moves);
+    console.log(this.turn);
   }
-  //   static propTypes = { children: PropTypes.func };
-
-  //   state = {
-  //     // Starting position.
-  //     fen: "start",
-  //     // Array of past game moves.
-  //     history: [],
-  //     // Moves in PNG format.
-  //     moves: "",
-  //     // Turn.
-  //     turn: "",
-  //   };
-
-  //   componentDidMount() {
-  //     this.setState({
-  //       fen: game.fen(),
-  //     });
-
-  //     this.engineGame().prepareMove();
-  //   }
-
-  //   componentDidUpdate() {
-  //     this.moves = game.pgn();
-
-  //     if (game.turn() === "w") {
-  //       this.turn = "White to move.";
-  //     } else {
-  //       this.turn = "Black to move.";
-  //     }
-  //   }
 
   onDrop = ({ sourceSquare, targetSquare }) => {
     // see if the move is legal
@@ -87,7 +63,7 @@ class HumanVsStockfish extends Component {
       promotion: "q",
     });
 
-    // illegal move
+    // Illegal move
     if (move === null) return;
 
     return new Promise((resolve) => {
@@ -341,21 +317,12 @@ function MyEngineBoard() {
       </HumanVsStockfish>
 
       <div className="myButtons">
-        <button>Resign</button>
-        <button>Offer draw</button>
+        <Button>Resign</Button>
+        <Button>Offer draw</Button>
+        <Button>Save game</Button>
       </div>
     </div>
   );
 }
 
 export default MyEngineBoard;
-
-const boardsContainer = {
-  display: "flex",
-  justifyContent: "space-around",
-  alignItems: "center",
-};
-const boardStyle = {
-  borderRadius: "5px",
-  boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-};

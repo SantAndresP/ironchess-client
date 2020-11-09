@@ -1,16 +1,13 @@
 /* CSS file for both `MyHumanBoard` and `MyEngineBoard`. */
-.myGamespace {
-  display: flex;
-  flex-direction: column;
-}
-
 .myChessboard {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .myChessboard > * {
-  margin: 0 20px;
+  margin: 20px 0;
 }
 
 .myButtons {

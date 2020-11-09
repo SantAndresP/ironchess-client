@@ -1,5 +1,5 @@
 // Setup.
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Switch, Route, withRouter } from "react-router-dom";
 
@@ -13,28 +13,27 @@ import Signup from "./auth/Signup";
 import PrivateProfile from "./user/PrivateProfile";
 import PublicHome from "./home/PublicHome";
 import PrivateHome from "./home/PrivateHome";
+import PrivateGame from "./game/PrivateGame";
 
-// Rendering function.
-class App extends Component {
-  state = {
-    loggedUser: null,
-    errorMessage: null,
-  };
+function App() {
+  const [loggedUser, setLoggedUser] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [room, setRoom] = useState("");
+  const [userName, setUserName] = useState("");
 
-  componentDidMount() {
-    if (!this.state.loggedUser) {
+  // componentDidMount.
+  useEffect(() => {
+    if (!loggedUser) {
       axios
         .get(`http://localhost:5000/api/user`, { withCredentials: true })
         .then((res) => {
-          this.setState({
-            loggedUser: res.data,
-          });
+          setLoggedUser(res.data);
         });
     }
-  }
+  }, []);
 
   // Sign up.
-  handleSignup = (e) => {
+  const handleSignup = (e) => {
     e.preventDefault();
 
     const { username, email, password } = e.target;
@@ -50,19 +49,14 @@ class App extends Component {
         { withCredentials: true }
       )
       .then((res) => {
-        this.setState(
-          {
-            loggedUser: res.data,
-          },
-          () => {
-            this.props.history.push("/");
-          }
-        );
+        setLoggedUser(res.data, () => {
+          props.history.push("/");
+        });
       });
   };
 
   // Sign in.
-  handleSignin = (e) => {
+  const handleSignin = (e) => {
     e.preventDefault();
 
     const { email, password } = e.target;
@@ -77,120 +71,111 @@ class App extends Component {
         { withCredentials: true }
       )
       .then((res) => {
-        this.setState(
-          {
-            loggedUser: res.data,
-          },
-          () => {
-            this.props.history.push("/");
-          }
-        );
+        setLoggedUser(res.data, () => {
+          props.history.push("/");
+        });
       })
       .catch((err) => {
-        console.log(err.response.data);
-        this.setState({
-          errorMessage: err.response.data.error,
-        });
+        setErrorMsg(err.response.data.error);
       });
   };
 
   // Log out.
-  handleLogout = (e) => {
+  const handleLogout = (e) => {
     axios
       .post(`http://localhost:5000/api/logout`, {}, { withCredentials: true })
       .then(() => {
-        this.setState({
-          loggedUser: null,
-        });
+        setLoggedUser(null);
       });
   };
 
-  // Unmounts error message.
-  handleUnmount = () => {
-    this.setState({
-      errorMessage: null,
-    });
+  // Unmounts `errorMsg`.
+  const handleUnmount = () => {
+    setErrorMsg(null);
   };
 
-  render() {
-    const { loggedUser, errorMessage } = this.state;
+  return (
+    <div className="myApp">
+      <header>
+        <MyNavbar loggedUser={loggedUser} onLogout={handleLogout} />
+      </header>
 
-    return (
-      <div className="myApp">
-        <header>
-          <MyNavbar loggedUser={loggedUser} onLogout={this.handleLogout} />
-        </header>
+      <main>
+        <Switch>
+          {/* Public or Private homepage. */}
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return !loggedUser ? <PublicHome /> : <PrivateHome />;
+            }}
+          />
 
-        <main>
-          <Switch>
-            {/* Public or Private homepage. */}
-            <Route
-              exact
-              path="/"
-              render={() => {
-                return !loggedUser ? <PublicHome /> : <PrivateHome />;
-              }}
-            />
+          {/* Sign in. */}
+          <Route
+            path="/signin"
+            render={(routeProps) => {
+              return (
+                <Signin
+                  onUnmount={handleUnmount}
+                  errorMsg={errorMsg}
+                  onSignin={handleSignin}
+                  {...routeProps}
+                />
+              );
+            }}
+          />
 
-            {/* Sign in. */}
-            <Route
-              path="/signin"
-              render={(routeProps) => {
-                return (
-                  <Signin
-                    onUnmount={this.handleUnmount}
-                    errorMessage={errorMessage}
-                    onSignin={this.handleSignin}
-                    {...routeProps}
-                  />
-                );
-              }}
-            />
+          {/* Sign up. */}
+          <Route
+            path="/signup"
+            render={(routeProps) => {
+              return <Signup onSignup={handleSignup} {...routeProps} />;
+            }}
+          />
 
-            {/* Sign up. */}
-            <Route
-              path="/signup"
-              render={(routeProps) => {
-                return <Signup onSignup={this.handleSignup} {...routeProps} />;
-              }}
-            />
+          {/* Private profile. */}
+          <Route
+            path="/private"
+            render={() => {
+              return <PrivateProfile loggedUser={loggedUser} />;
+            }}
+          />
 
-            {/* Private profile. */}
-            <Route
-              path="/private"
-              render={() => {
-                return <PrivateProfile loggedUser={loggedUser} />;
-              }}
-            />
+          {/* Public profile. */}
+          <Route
+            path="/public/:id"
+            render={() => {
+              return <PrivateProfile loggedUser={loggedUser} />;
+            }}
+          />
 
-            {/* Public profile. */}
-            <Route
-              path="/public/:id"
-              render={() => {
-                return <PrivateProfile loggedUser={loggedUser} />;
-              }}
-            />
+          {/* Private game. */}
+          <Route
+            path="/stockfish"
+            render={() => {
+              return <PrivateGame loggedUser={loggedUser} />;
+            }}
+          />
 
-            {/* Private game. */}
-            <Route
-              path="/game/:id"
-              render={() => {
-                return <PrivateGame loggedUser={loggedUser} />;
-              }}
-            />
+          <Route
+            path="/game"
+            render={() => {
+              return <PrivateGame loggedUser={loggedUser} />;
+            }}
+          />
 
-            {/* Public game. */}
-            <Route
-              path="/game/:id"
-              render={() => {
-                return <PublicGame loggedUser={loggedUser} />;
-              }}
-            />
-          </Switch>
-        </main>
-      </div>
-    );
-  }
+          {/* Public game. */}
+          <Route
+            path="/game/:id"
+            render={() => {
+              return <PublicGame loggedUser={loggedUser} />;
+            }}
+          />
+        </Switch>
+      </main>
+    </div>
+  );
 }
 
 export default withRouter(App);
