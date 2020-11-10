@@ -5,28 +5,53 @@ import React, { useState, useEffect } from "react";
 import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
 import MyMoves from "./MyMoves";
+import io from "socket.io-client";
 
 // Styles.
 import "../../styles/MyBoard.css";
 import { Button } from "react-bootstrap";
-import { withRouter } from "react-router-dom";
+
+// Variables.
+let roomId;
+let socket;
+let game;
+let playerColor;
+const CONNECTION_PORT = "localhost:5000";
 
 // Move validation function.
 function HumanVsHuman(props) {
   // Hooks.
-  const [game, setGame] = useState(null);
+  // const [game, setGame] = useState(null);
   const [fen, setFen] = useState("start");
   const [dropSquareStyle, setDropSquareStyle] = useState({});
   const [squareStyles, setSquareStyles] = useState({});
   const [pieceSquare, setPieceSquare] = useState("");
   const [history, setHistory] = useState([]);
   const [movesPGN, setMovesPGN] = useState("");
-  const [turn, setTurn] = useState("");
+  const [turn, setTurn] = useState("w");
 
   // componentDidMount.
   useEffect(() => {
-    setGame(new Chess());
+    game = Chess();
+
+    socket = io(CONNECTION_PORT);
+    roomId = props.match.params.id;
+    playerColor = props.match.params.color;
+
+    socket.emit("join_game", roomId);
   }, []);
+
+  // componentDidUpdate.
+  useEffect(() => {
+    socket.on("receive_info", (data) => {
+      console.log("Information received.", data);
+
+      setFen(data.position);
+      setMovesPGN(data.moves);
+      setTurn(data.turn);
+      game.load_pgn(data.moves);
+    });
+  });
 
   // Keeps clicked square style and removes hint squares.
   const removeHighlightSquare = () => {
@@ -59,21 +84,30 @@ function HumanVsHuman(props) {
   };
 
   const handleDrop = ({ sourceSquare, targetSquare }) => {
-    // Sees if the move is legal.
+    if (playerColor !== game.turn()) {
+      return;
+    }
+
     let move = game.move({
       from: sourceSquare,
       to: targetSquare,
       promotion: "q", // Always promotes to a queen.
     });
 
-    // Illegal move.
     if (move === null) return;
 
     setFen(game.fen());
     setHistory(game.history({ verbose: true }));
     setMovesPGN(game.pgn());
+    setTurn(game.turn());
     setSquareStyles(squareStyling({ pieceSquare, history }));
-    game.turn() === "w" ? setTurn("White to move.") : setTurn("Black to move.");
+
+    socket.emit("send_game_info", {
+      room: roomId,
+      moves: game.pgn(),
+      position: game.fen(),
+      turn: game.turn(),
+    });
   };
 
   const handleMouseOverSquare = (square) => {
@@ -97,33 +131,13 @@ function HumanVsHuman(props) {
 
   const handleMouseOutSquare = (square) => removeHighlightSquare(square);
 
-  // Central squares get diff `dropSquareStyles`.
+  // Central squares get diferents `dropSquareStyles`.
   const handleDragOverSquare = (square) => {
     setDropSquareStyle(
       square === "e4" || square === "d4" || square === "e5" || square === "d5"
         ? { backgroundColor: "cornFlowerBlue" }
         : { boxShadow: "inset 0 0 1px 4px rgb(255, 255, 0)" }
     );
-  };
-
-  const handleSquareClick = (square) => {
-    setSquareStyles(squareStyling({ pieceSquare: square, history }));
-    setPieceSquare(square);
-
-    let move = game.move({
-      from: pieceSquare,
-      to: square,
-      promotion: "q", // Always promotes to a queen.
-    });
-
-    // Illegal move.
-    if (move === null) return;
-
-    setFen(game.fen());
-    setHistory(game.history({ verbose: true }));
-    setMovesPGN(game.pgn());
-    setPieceSquare("");
-    game.turn() === "w" ? setTurn("White to move.") : setTurn("Black to move.");
   };
 
   const handleSquareRightClick = (square) =>
@@ -134,7 +148,6 @@ function HumanVsHuman(props) {
     handleMouseOverSquare,
     handleMouseOutSquare,
     handleDrop,
-    handleSquareClick,
     handleSquareRightClick,
     handleDragOverSquare,
     dropSquareStyle,
@@ -144,17 +157,16 @@ function HumanVsHuman(props) {
   });
 }
 
-function MyHumanBoard() {
+function MyHumanBoard(props) {
   return (
-    <HumanVsHuman>
+    <HumanVsHuman {...props}>
       {({
         position,
         handleDrop,
         handleMouseOverSquare,
         handleMouseOutSquare,
-        handleSquareClick,
-        handleSquareRightClick,
         handleDragOverSquare,
+        handleSquareRightClick,
         squareStyles,
         dropSquareStyle,
         moves,
@@ -168,7 +180,6 @@ function MyHumanBoard() {
             onDrop={handleDrop}
             onMouseOverSquare={handleMouseOverSquare}
             onMouseOutSquare={handleMouseOutSquare}
-            onSquareClick={handleSquareClick}
             onSquareRightClick={handleSquareRightClick}
             onDragOverSquare={handleDragOverSquare}
             squareStyles={squareStyles}
@@ -212,4 +223,4 @@ const squareStyling = ({ pieceSquare, history }) => {
   };
 };
 
-export default withRouter(MyHumanBoard);
+export default MyHumanBoard;

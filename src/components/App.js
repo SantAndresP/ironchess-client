@@ -15,11 +15,10 @@ import PublicHome from "./home/PublicHome";
 import PrivateHome from "./home/PrivateHome";
 import PrivateGame from "./game/PrivateGame";
 
+/* ---------- App. ---------- */
 function App() {
   const [loggedUser, setLoggedUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [room, setRoom] = useState("");
-  const [userName, setUserName] = useState("");
 
   // componentDidMount.
   useEffect(() => {
@@ -52,6 +51,9 @@ function App() {
         setLoggedUser(res.data, () => {
           props.history.push("/");
         });
+      })
+      .catch((err) => {
+        setErrorMsg(err.response.data.error);
       });
   };
 
@@ -153,23 +155,16 @@ function App() {
           {/* Private game. */}
           <Route
             path="/stockfish"
-            render={() => {
-              return <PrivateGame loggedUser={loggedUser} />;
+            render={(routeProps) => {
+              return <PrivateGame loggedUser={loggedUser} {...routeProps} />;
             }}
           />
 
           <Route
-            path="/game"
-            render={() => {
-              return <PrivateGame loggedUser={loggedUser} />;
-            }}
-          />
-
-          {/* Public game. */}
-          <Route
-            path="/game/:id"
-            render={() => {
-              return <PublicGame loggedUser={loggedUser} />;
+            exact
+            path="/game/:id/:color"
+            render={(routeProps) => {
+              return <PrivateGame loggedUser={loggedUser} {...routeProps} />;
             }}
           />
         </Switch>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 // Styles.
 import { Button } from "react-bootstrap";
@@ -9,13 +10,15 @@ function PrivateHome(props) {
   return (
     <div className="myPrivateHome">
       {/* Select time control */}
+      <h1>Create a game</h1>
+
       <div className="myTimeButtons">
         <Button size="lg" variant="dark">
           <Link to="/stockfish">Stockfish</Link>
         </Button>
 
         <Button size="lg" variant="light">
-          <Link to="/game">Timeless</Link>
+          <Link to={`/game/${uuidv4()}/${color}`}>Timeless</Link>
         </Button>
 
         <Button size="lg" variant="danger">

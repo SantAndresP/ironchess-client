@@ -1,14 +1,14 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
 import MyEngineBoard from "../chess/MyEngineBoard";
 import MyHumanBoard from "../chess/MyHumanBoard";
 
 function PrivateGame(props) {
+  console.log(props);
   return props.match.path === "/stockfish" ? (
     <MyEngineBoard />
   ) : (
-    <MyHumanBoard />
+    <MyHumanBoard {...props} />
   );
 }
 
-export default withRouter(PrivateGame);
+export default PrivateGame;

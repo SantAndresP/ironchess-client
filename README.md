@@ -1,4 +1,4 @@
-# IronChess
+# IronChess | Client
 
 ## Description
 
