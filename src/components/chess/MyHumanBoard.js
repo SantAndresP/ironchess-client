@@ -6,6 +6,7 @@ import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
 import MyMoves from "./MyMoves";
 import io from "socket.io-client";
+import { URL } from "../../config";
 
 // Styles.
 import "../../styles/MyBoard.css";
@@ -16,7 +17,7 @@ let roomId;
 let socket;
 let game;
 let playerColor;
-const CONNECTION_PORT = "localhost:5000";
+const CONNECTION_PORT = `${URL}`;
 
 // Move validation function.
 function HumanVsHuman(props) {
@@ -29,6 +30,7 @@ function HumanVsHuman(props) {
   const [history, setHistory] = useState([]);
   const [movesPGN, setMovesPGN] = useState("");
   const [turn, setTurn] = useState("w");
+  const [orientation, setOrientation] = useState("");
 
   // componentDidMount.
   useEffect(() => {
@@ -38,7 +40,9 @@ function HumanVsHuman(props) {
     roomId = props.match.params.id;
     playerColor = props.match.params.color;
 
-    socket.emit("join_game", roomId);
+    playerColor === "w" ? setOrientation("white") : setOrientation("black");
+
+    socket.emit("join_game", { roomId, loggedUser: props.loggedUser });
   }, []);
 
   // componentDidUpdate.
@@ -154,6 +158,7 @@ function HumanVsHuman(props) {
     squareStyles,
     moves: movesPGN,
     turn,
+    orientation,
   });
 }
 
@@ -171,11 +176,13 @@ function MyHumanBoard(props) {
         dropSquareStyle,
         moves,
         turn,
+        orientation,
       }) => (
         <div className="myChessboard">
           <Chessboard
             id="HumanVsHuman"
             width={560}
+            orientation={orientation}
             position={position}
             onDrop={handleDrop}
             onMouseOverSquare={handleMouseOverSquare}

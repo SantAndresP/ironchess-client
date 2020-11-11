@@ -2,18 +2,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Switch, Route, withRouter } from "react-router-dom";
+import { API_URL } from "../config";
 
 // Styles.
 import "../styles/App.css";
 
-// Components
+// Components.
 import MyNavbar from "./MyNavbar";
+import Home from "./Home";
 import Signin from "./auth/Signin";
 import Signup from "./auth/Signup";
+import Game from "./Game";
 import PrivateProfile from "./user/PrivateProfile";
-import PublicHome from "./home/PublicHome";
-import PrivateHome from "./home/PrivateHome";
-import PrivateGame from "./game/PrivateGame";
 
 /* ---------- App. ---------- */
 function App() {
@@ -23,11 +23,9 @@ function App() {
   // componentDidMount.
   useEffect(() => {
     if (!loggedUser) {
-      axios
-        .get(`http://localhost:5000/api/user`, { withCredentials: true })
-        .then((res) => {
-          setLoggedUser(res.data);
-        });
+      axios.get(`${API_URL}/user`, { withCredentials: true }).then((res) => {
+        setLoggedUser(res.data);
+      });
     }
   }, []);
 
@@ -39,7 +37,7 @@ function App() {
 
     axios
       .post(
-        `http://localhost:5000/api/signup`,
+        `${API_URL}/signup`,
         {
           username: username.value,
           email: email.value,
@@ -65,7 +63,7 @@ function App() {
 
     axios
       .post(
-        `http://localhost:5000/api/signin`,
+        `${API_URL}/signin`,
         {
           email: email.value,
           password: password.value,
@@ -84,11 +82,9 @@ function App() {
 
   // Log out.
   const handleLogout = (e) => {
-    axios
-      .post(`http://localhost:5000/api/logout`, {}, { withCredentials: true })
-      .then(() => {
-        setLoggedUser(null);
-      });
+    axios.post(`${API_URL}/logout`, {}, { withCredentials: true }).then(() => {
+      setLoggedUser(null);
+    });
   };
 
   // Unmounts `errorMsg`.
@@ -104,12 +100,12 @@ function App() {
 
       <main>
         <Switch>
-          {/* Public or Private homepage. */}
+          {/* Home. */}
           <Route
             exact
             path="/"
             render={() => {
-              return !loggedUser ? <PublicHome /> : <PrivateHome />;
+              return <Home loggedUser={loggedUser} />;
             }}
           />
 
@@ -138,7 +134,7 @@ function App() {
 
           {/* Private profile. */}
           <Route
-            path="/private"
+            path="/private/:id"
             render={() => {
               return <PrivateProfile loggedUser={loggedUser} />;
             }}
@@ -148,15 +144,15 @@ function App() {
           <Route
             path="/public/:id"
             render={() => {
-              return <PrivateProfile loggedUser={loggedUser} />;
+              return <PublicProfile loggedUser={loggedUser} />;
             }}
           />
 
-          {/* Private game. */}
+          {/* Game. */}
           <Route
             path="/stockfish"
             render={(routeProps) => {
-              return <PrivateGame loggedUser={loggedUser} {...routeProps} />;
+              return <Game loggedUser={loggedUser} {...routeProps} />;
             }}
           />
 
@@ -164,7 +160,7 @@ function App() {
             exact
             path="/game/:id/:color"
             render={(routeProps) => {
-              return <PrivateGame loggedUser={loggedUser} {...routeProps} />;
+              return <Game loggedUser={loggedUser} {...routeProps} />;
             }}
           />
         </Switch>

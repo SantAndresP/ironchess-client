@@ -14,7 +14,9 @@ function MyNavbar(props) {
       {props.loggedUser ? (
         <>
           <Link onClick={props.onLogout}>Log out</Link>
-          <Link to="/private">{props.loggedUser.username}</Link>
+          <Link to={`/private/${props.loggedUser._id}`}>
+            {props.loggedUser.username}
+          </Link>
         </>
       ) : (
         <>
