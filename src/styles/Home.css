@@ -1,0 +1,11 @@
+.myHome {
+  text-align: center;
+}
+
+.myTitle {
+  margin-bottom: 40px;
+}
+
+.selectButtons > * {
+  margin: 20px;
+}

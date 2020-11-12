@@ -1,0 +1,8 @@
+.myListGroup {
+  max-width: 300px;
+  width: 300px;
+}
+
+.myListGroup > * {
+  margin: 10px;
+}

@@ -315,12 +315,6 @@ function MyEngineBoard() {
           </div>
         )}
       </HumanVsStockfish>
-
-      <div className="myButtons">
-        <Button>Resign</Button>
-        <Button>Offer draw</Button>
-        <Button>Save game</Button>
-      </div>
     </div>
   );
 }

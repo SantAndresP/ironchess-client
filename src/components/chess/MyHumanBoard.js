@@ -10,7 +10,7 @@ import { URL } from "../../config";
 
 // Styles.
 import "../../styles/MyBoard.css";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 
 // Variables.
 let roomId;
@@ -19,10 +19,8 @@ let game;
 let playerColor;
 const CONNECTION_PORT = `${URL}`;
 
-// Move validation function.
 function HumanVsHuman(props) {
   // Hooks.
-  // const [game, setGame] = useState(null);
   const [fen, setFen] = useState("start");
   const [dropSquareStyle, setDropSquareStyle] = useState({});
   const [squareStyles, setSquareStyles] = useState({});
@@ -31,18 +29,28 @@ function HumanVsHuman(props) {
   const [movesPGN, setMovesPGN] = useState("");
   const [turn, setTurn] = useState("w");
   const [orientation, setOrientation] = useState("");
+  const [white, setWhite] = useState("");
+  const [black, setBlack] = useState("");
+  const [spectator, setSpectator] = useState([]);
 
   // componentDidMount.
   useEffect(() => {
     game = Chess();
-
     socket = io(CONNECTION_PORT);
     roomId = props.match.params.id;
     playerColor = props.match.params.color;
 
-    playerColor === "w" ? setOrientation("white") : setOrientation("black");
-
-    socket.emit("join_game", { roomId, loggedUser: props.loggedUser });
+    if (playerColor === "w" && white.length === 0) {
+      setOrientation("white");
+      setWhite(props.loggedUser_id);
+      socket.emit("join_game", { roomId, white: props.loggedUser._id });
+    } else if (playerColor === "b" && black.length === 0) {
+      setOrientation("black");
+      setBlack(props.loggedUser_id);
+      socket.emit("join_game", { roomId, black: props.loggedUser._id });
+    } else {
+      spectator.push(props.loggedUser._id);
+    }
   }, []);
 
   // componentDidUpdate.
@@ -147,6 +155,15 @@ function HumanVsHuman(props) {
   const handleSquareRightClick = (square) =>
     setSquareStyles({ [square]: { backgroundColor: "deepPink" } });
 
+  // Loading spinner.
+  if (!props.loggedUser) {
+    return (
+      <Spinner animation="border" role="status" variant="light">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
+  }
+
   return props.children({
     position: fen,
     handleMouseOverSquare,
@@ -181,7 +198,7 @@ function MyHumanBoard(props) {
         <div className="myChessboard">
           <Chessboard
             id="HumanVsHuman"
-            width={560}
+            width={550}
             orientation={orientation}
             position={position}
             onDrop={handleDrop}
@@ -197,13 +214,10 @@ function MyHumanBoard(props) {
             }}
           />
 
-          <div className="myButtons">
+          <div className="movesAndButton">
+            <MyMoves moves={moves} turn={turn}></MyMoves>
             <Button>Resign</Button>
-            <Button>Offer draw</Button>
-            <Button>Save game</Button>
           </div>
-
-          <MyMoves moves={moves} turn={turn}></MyMoves>
         </div>
       )}
     </HumanVsHuman>

@@ -7,10 +7,10 @@ let socket;
 const CONNECTION_PORT = `${URL}`;
 
 function ChatBox(props) {
-  console.log(props);
-  // Before Login
-  let loggedIn;
-  props.loggedUser ? (loggedIn = true) : (loggedIn = false);
+  if (!props.loggedUser) {
+    //show loading screen or
+    return null;
+  }
 
   const room = props.match.params.id;
   const userName = props.loggedUser.username;
@@ -21,6 +21,7 @@ function ChatBox(props) {
 
   useEffect(() => {
     socket = io(CONNECTION_PORT);
+    socket.emit("join_room", room);
   }, [CONNECTION_PORT]);
 
   useEffect(() => {
@@ -28,11 +29,6 @@ function ChatBox(props) {
       setMessageList([...messageList, data]);
     });
   });
-
-  const connectToRoom = () => {
-    setLoggedIn(true);
-    socket.emit("join_room", room);
-  };
 
   const sendMessage = async () => {
     let messageContent = {
@@ -50,55 +46,33 @@ function ChatBox(props) {
 
   return (
     <div className="ChatBox">
-      {!loggedIn ? (
-        <div className="logIn">
-          <div className="inputs">
-            <input
-              type="text"
-              placeholder="Name..."
-              onChange={(e) => {
-                setUserName(e.target.value);
-              }}
-            />
-            <input
-              type="text"
-              placeholder="Room..."
-              onChange={(e) => {
-                setRoom(e.target.value);
-              }}
-            />
-          </div>
-          <button onClick={connectToRoom}>Enter Chat</button>
-        </div>
-      ) : (
-        <div className="chatContainer">
-          <div className="messages">
-            {messageList.map((val, key) => {
-              return (
-                <div
-                  className="messageContainer"
-                  id={val.author == userName ? "You" : "Other"}
-                >
-                  <div className="messageIndividual">
-                    {val.author}: {val.message}
-                  </div>
+      <div className="chatContainer">
+        <div className="messages">
+          {messageList.map((val) => {
+            return (
+              <div
+                className="messageContainer"
+                id={val.author == userName ? "You" : "Other"}
+              >
+                <div className="messageIndividual">
+                  {val.author}: {val.message}
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="messageInputs">
-            <input
-              type="text"
-              placeholder="Message..."
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
-            />
-            <button onClick={sendMessage}>Send</button>
-          </div>
+              </div>
+            );
+          })}
         </div>
-      )}
+
+        <div className="messageInputs">
+          <input
+            type="text"
+            placeholder="Message..."
+            onChange={(e) => {
+              setMessage(e.target.value);
+            }}
+          />
+          <button onClick={sendMessage}>Send</button>
+        </div>
+      </div>
     </div>
   );
 }

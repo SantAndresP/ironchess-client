@@ -4,9 +4,6 @@ import axios from "axios";
 import { Switch, Route, withRouter } from "react-router-dom";
 import { API_URL } from "../config";
 
-// Styles.
-import "../styles/App.css";
-
 // Components.
 import MyNavbar from "./MyNavbar";
 import Home from "./Home";
@@ -16,7 +13,7 @@ import Game from "./Game";
 import PrivateProfile from "./user/PrivateProfile";
 
 /* ---------- App. ---------- */
-function App() {
+function App(props) {
   const [loggedUser, setLoggedUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -28,6 +25,14 @@ function App() {
       });
     }
   }, []);
+
+  // componentDidUpdate.
+  // useEffect(() => {
+  //   console.log("Sign in!");
+  //   console.log(loggedUser);
+  //   console.log(props.history);
+  //   props.history.push("/");
+  // }, [loggedUser]);
 
   // Sign up.
   const handleSignup = (e) => {
@@ -46,9 +51,8 @@ function App() {
         { withCredentials: true }
       )
       .then((res) => {
-        setLoggedUser(res.data, () => {
-          props.history.push("/");
-        });
+        setLoggedUser(res.data);
+        props.history.push("/");
       })
       .catch((err) => {
         setErrorMsg(err.response.data.error);
@@ -71,9 +75,8 @@ function App() {
         { withCredentials: true }
       )
       .then((res) => {
-        setLoggedUser(res.data, () => {
-          props.history.push("/");
-        });
+        setLoggedUser(res.data);
+        props.history.push("/");
       })
       .catch((err) => {
         setErrorMsg(err.response.data.error);
@@ -84,6 +87,7 @@ function App() {
   const handleLogout = (e) => {
     axios.post(`${API_URL}/logout`, {}, { withCredentials: true }).then(() => {
       setLoggedUser(null);
+      props.history.push("/");
     });
   };
 

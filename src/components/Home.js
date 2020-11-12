@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // Styles.
 import { Button } from "react-bootstrap";
+import "../styles/Home.css";
 
 // Rendering function.
 function Home(props) {
@@ -14,16 +15,20 @@ function Home(props) {
   return (
     <div className="myHome">
       {/* Select time control */}
-      <h1>Create a new game</h1>
+      <h1 className="myTitle">New game</h1>
 
-      <div className="myTimeButtons">
-        <Button size="lg" variant="dark">
-          <Link to="/stockfish">Stockfish</Link>
-        </Button>
+      <div className="selectButtons">
+        <Link to="/stockfish">
+          <Button size="lg" variant="dark">
+            <img src="https://i.imgur.com/jyTRjkY.png" />
+          </Button>
+        </Link>
 
-        <Button size="lg" variant="light">
-          <Link to={`/game/${uuidv4()}/${color}`}>Human</Link>
-        </Button>
+        <Link to={`/game/${uuidv4()}/${color}`}>
+          <Button size="lg" variant="light">
+            <img src="https://i.imgur.com/PBtKjOl.png" />
+          </Button>
+        </Link>
       </div>
     </div>
   );
