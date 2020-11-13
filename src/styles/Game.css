@@ -1,0 +1,8 @@
+.myGame {
+  display: flex;
+  justify-content: center;
+}
+
+.myGame > * {
+  margin: 20px;
+}

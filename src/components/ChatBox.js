@@ -3,6 +3,14 @@ import io from "socket.io-client";
 import "../styles/ChatBox.css";
 
 import { URL } from "../config";
+import {
+  Button,
+  Card,
+  Form,
+  FormControl,
+  InputGroup,
+  ListGroup,
+} from "react-bootstrap";
 let socket;
 const CONNECTION_PORT = `${URL}`;
 
@@ -45,35 +53,34 @@ function ChatBox(props) {
   };
 
   return (
-    <div className="ChatBox">
-      <div className="chatContainer">
-        <div className="messages">
-          {messageList.map((val) => {
-            return (
-              <div
-                className="messageContainer"
-                id={val.author == userName ? "You" : "Other"}
-              >
-                <div className="messageIndividual">
-                  {val.author}: {val.message}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+    <Card className="myChatBoxCard">
+      <ListGroup>
+        {messageList.map((val) => {
+          return (
+            <ListGroup.Item
+              variant={val.author == userName ? "primary" : "success"}
+            >
+              <b>{val.author}:</b> {val.message}
+            </ListGroup.Item>
+          );
+        })}
+      </ListGroup>
 
-        <div className="messageInputs">
-          <input
-            type="text"
-            placeholder="Message..."
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
-          />
-          <button onClick={sendMessage}>Send</button>
-        </div>
-      </div>
-    </div>
+      <InputGroup className="mb-3" className="myChatInput">
+        <FormControl
+          type="text"
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
+          placeholder="WRITE..."
+        />
+        <InputGroup.Append>
+          <Button onClick={sendMessage} variant="primary">
+            Send
+          </Button>
+        </InputGroup.Append>
+      </InputGroup>
+    </Card>
   );
 }
 

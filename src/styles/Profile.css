@@ -1,0 +1,11 @@
+.myGameInfoContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.myGameInfoContainer > * {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+  width: 600px;
+}

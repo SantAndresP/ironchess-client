@@ -216,7 +216,6 @@ function MyHumanBoard(props) {
 
           <div className="movesAndButton">
             <MyMoves moves={moves} turn={turn}></MyMoves>
-            <Button>Resign</Button>
           </div>
         </div>
       )}

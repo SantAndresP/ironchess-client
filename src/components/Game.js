@@ -6,6 +6,8 @@ import ChatBox from "./ChatBox";
 import MyEngineBoard from "./chess/MyEngineBoard";
 import MyHumanBoard from "./chess/MyHumanBoard";
 
+import "../styles/Game.css";
+
 function Game(props) {
   if (!props.loggedUser) {
     //show loading screen or
@@ -13,14 +15,14 @@ function Game(props) {
   }
 
   return props.match.path === "/stockfish" ? (
-    <>
+    <div>
       <MyEngineBoard />
-    </>
+    </div>
   ) : (
-    <>
+    <div className="myGame">
       <ChatBox loggedUser={props.loggedUser} {...props} />
       <MyHumanBoard loggedUser={props.loggedUser} {...props} />
-    </>
+    </div>
   );
 }
 

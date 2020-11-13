@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { Spinner, Card, ListGroup } from "react-bootstrap";
 import { API_URL } from "../../config";
+
+import "../../styles/Profile.css";
 
 function PrivateProfile() {
   const [games, setGames] = useState([]);
@@ -11,7 +12,7 @@ function PrivateProfile() {
   useEffect(() => {
     axios.get(`${API_URL}/games`, { withCredentials: true }).then((res) => {
       setGames(res.data);
-      console.log(games);
+      console.log(res.data);
     });
   }, []);
 
@@ -28,10 +29,25 @@ function PrivateProfile() {
     <div className="myGamesList">
       {games.map((game) => {
         return (
-          <div>
-            <p>{game.roomId}</p>
-            <p>{game.white}</p>
-            <p>{game.movetext}</p>
+          <div className="myGameInfoContainer">
+            <ListGroup>
+              <ListGroup.Item>
+                <div className="myGameInfo">
+                  <p>
+                    <b>Id:</b> {game.roomId}
+                  </p>
+                  <p>
+                    <b>White:</b> {game.white}
+                  </p>
+                  <p>
+                    <b>Black:</b> {game.black ? game.black : "N/A"}
+                  </p>
+                  <p>
+                    <b>Moves:</b> {game.movetext}
+                  </p>
+                </div>
+              </ListGroup.Item>
+            </ListGroup>
           </div>
         );
       })}

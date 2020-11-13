@@ -1,32 +1,44 @@
 /*    Sign up.    */
 import React from "react";
+import { Alert, Button, Form } from "react-bootstrap";
 
 // Rendering function.
 function Signup(props) {
   return (
-    <form onSubmit={props.onSignup}>
-      <div className="form-group">
-        <label>Username</label>
-        <input name="username" type="text" />
-      </div>
+    <div className="myFormContainer">
+      <Form onSubmit={props.onSignup} className="myForm">
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control name="email" type="text" placeholder="Enter email" />
+        </Form.Group>
 
-      <div className="form-group">
-        <label>Email address</label>
-        <input name="email" type="text" />
-      </div>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            name="username"
+            type="text"
+            placeholder="Enter username"
+          />
+        </Form.Group>
 
-      <div className="form-group">
-        <label>Password</label>
-        <input name="password" type="password" />
-      </div>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            name="password"
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Group>
 
-      <button type="submit">Submit</button>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
 
-      {/*    In case of error.    */}
-      {props.errorMessage ? (
-        <p style={{ color: "red" }}>{props.errorMessage}</p>
-      ) : null}
-    </form>
+        {props.errorMsg ? (
+          <Alert variant="danger">{props.errorMsg}</Alert>
+        ) : null}
+      </Form>
+    </div>
   );
 }
 

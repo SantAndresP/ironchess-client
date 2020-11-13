@@ -1,5 +1,8 @@
 /*    Sign in.    */
 import React, { useEffect } from "react";
+import { Button, Form } from "react-bootstrap";
+
+import "../../styles/Auth.css";
 
 // Rendering function.
 function Signin(props) {
@@ -8,22 +11,31 @@ function Signin(props) {
   }, []);
 
   return (
-    <form onSubmit={props.onSignin}>
-      <div className="form-group">
-        <label>Email address</label>
-        <input name="email" type="text" />
-      </div>
+    <div className="myFormContainer">
+      <Form onSubmit={props.onSignin} className="myForm">
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control name="email" type="text" placeholder="Enter email" />
+        </Form.Group>
 
-      <div className="form-group">
-        <label>Password</label>
-        <input name="password" type="password" />
-      </div>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            name="password"
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Group>
 
-      <button type="submit">Submit</button>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
 
-      {/*    In case of error.    */}
-      {props.errorMsg ? <p style={{ color: "red" }}>{props.errorMsg}</p> : null}
-    </form>
+        {props.errorMsg ? (
+          <Alert variant="danger">{props.errorMsg}</Alert>
+        ) : null}
+      </Form>
+    </div>
   );
 }
 

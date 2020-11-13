@@ -1,11 +1,16 @@
 .myHome {
+  margin-top: 30px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.myTitle {
-  margin-bottom: 40px;
+.vsButton {
+  margin: 35px;
 }
 
-.selectButtons > * {
-  margin: 20px;
+.vsButton > img {
+  width: 400px;
+  padding: 120px;
 }

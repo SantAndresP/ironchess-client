@@ -12,6 +12,8 @@ import Signup from "./auth/Signup";
 import Game from "./Game";
 import PrivateProfile from "./user/PrivateProfile";
 
+import "../styles/App.css";
+
 /* ---------- App. ---------- */
 function App(props) {
   const [loggedUser, setLoggedUser] = useState(null);

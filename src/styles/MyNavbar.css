@@ -1,11 +1,14 @@
 .myNav.nav {
-  padding: 20px 0;
+  padding: 10px 0;
   margin-bottom: 40px;
   display: flex;
-  justify-content: center;
-  background-color: #282c34;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffffff;
+  font-weight: bold;
 }
 
-.myNav > * {
+.userButtons > * {
   margin: 0 50px;
+  color: black;
 }

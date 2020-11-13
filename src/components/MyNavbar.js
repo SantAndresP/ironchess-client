@@ -10,20 +10,24 @@ import "../styles/MyNavbar.css";
 function MyNavbar(props) {
   return (
     <Nav className="myNav">
-      <Link to="/">IronChess</Link>
-      {props.loggedUser ? (
-        <>
-          <Link onClick={props.onLogout}>Log out</Link>
-          <Link to={`/private/${props.loggedUser._id}`}>
-            {props.loggedUser.username}
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link to="/signin">Sign in</Link>
-          <Link to="/signup">Sign up</Link>
-        </>
-      )}
+      <Link to="/">
+        <img src="https://i.imgur.com/cy6a0Hk.png" style={{ width: "200px" }} />
+      </Link>
+      <div className="userButtons">
+        {props.loggedUser ? (
+          <>
+            <Link onClick={props.onLogout}>LOG OUT</Link>
+            <Link to={`/private/${props.loggedUser._id}`}>
+              {props.loggedUser.username.toUpperCase()}
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/signin">SIGN IN</Link>
+            <Link to="/signup">SIGN UP</Link>
+          </>
+        )}
+      </div>
     </Nav>
   );
 }
