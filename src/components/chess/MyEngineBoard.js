@@ -45,14 +45,7 @@ class HumanVsStockfish extends Component {
 
   componentDidUpdate() {
     this.moves = game.pgn();
-
-    if (game.turn() === "w") {
-      this.turn = "White to move.";
-    } else {
-      this.turn = "Black to move.";
-    }
-    console.log(this.moves);
-    console.log(this.turn);
+    this.turn = game.turn();
   }
 
   onDrop = ({ sourceSquare, targetSquare }) => {

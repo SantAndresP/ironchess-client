@@ -13,6 +13,7 @@ import Game from "./Game";
 import PrivateProfile from "./user/PrivateProfile";
 
 import "../styles/App.css";
+import Edit from "./user/Edit";
 
 /* ---------- App. ---------- */
 function App(props) {
@@ -27,14 +28,6 @@ function App(props) {
       });
     }
   }, []);
-
-  // componentDidUpdate.
-  // useEffect(() => {
-  //   console.log("Sign in!");
-  //   console.log(loggedUser);
-  //   console.log(props.history);
-  //   props.history.push("/");
-  // }, [loggedUser]);
 
   // Sign up.
   const handleSignup = (e) => {
@@ -93,6 +86,31 @@ function App(props) {
     });
   };
 
+  // Edit profile.
+  const handleEdit = (e) => {
+    e.preventDefault();
+    const { about, image } = e.target;
+    let imageFile = image.files[0];
+
+    let uploadForm = new FormData();
+    uploadForm.append("imageUrl", imageFile);
+
+    axios.post(`${API_URL}/upload`, uploadForm).then((response) => {
+      let newInfo = {
+        about: about.value,
+        image: response.data.image,
+      };
+
+      axios
+        .patch(`${API_URL}/edit`, newInfo, { withCredentials: true })
+        .then((response) => {
+          console.log("This is edit response!", response.data);
+          setLoggedUser(response.data);
+          props.history.push(`/private/${loggedUser._id}`);
+        });
+    });
+  };
+
   // Unmounts `errorMsg`.
   const handleUnmount = () => {
     setErrorMsg(null);
@@ -143,6 +161,13 @@ function App(props) {
             path="/private/:id"
             render={() => {
               return <PrivateProfile loggedUser={loggedUser} />;
+            }}
+          />
+
+          <Route
+            path="/edit"
+            render={() => {
+              return <Edit loggedUser={loggedUser} onSubmit={handleEdit} />;
             }}
           />
 

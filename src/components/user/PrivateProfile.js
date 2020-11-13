@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Spinner, Card, ListGroup } from "react-bootstrap";
+import { Spinner, Card, ListGroup, Button } from "react-bootstrap";
 import { API_URL } from "../../config";
 
 import "../../styles/Profile.css";
+import { Link } from "react-router-dom";
 
-function PrivateProfile() {
+function PrivateProfile(props) {
   const [games, setGames] = useState([]);
 
   // componentDidMount.
@@ -26,31 +27,44 @@ function PrivateProfile() {
   }
 
   return (
-    <div className="myGamesList">
-      {games.map((game) => {
-        return (
-          <div className="myGameInfoContainer">
-            <ListGroup>
-              <ListGroup.Item>
-                <div className="myGameInfo">
-                  <p>
-                    <b>Id:</b> {game.roomId}
-                  </p>
-                  <p>
-                    <b>White:</b> {game.white}
-                  </p>
-                  <p>
-                    <b>Black:</b> {game.black ? game.black : "N/A"}
-                  </p>
-                  <p>
-                    <b>Moves:</b> {game.movetext}
-                  </p>
-                </div>
-              </ListGroup.Item>
-            </ListGroup>
-          </div>
-        );
-      })}
+    <div className="myProfile">
+      <Card style={{ width: "400px" }}>
+        <Card.Img variant="top" src={props.loggedUser.image} />
+        <Card.Body>
+          <Card.Title>{props.loggedUser.username}</Card.Title>
+          <Card.Text>{props.loggedUser.about}</Card.Text>
+          <Link to="/edit">
+            <Button variant="primary">Edit</Button>
+          </Link>
+        </Card.Body>
+      </Card>
+
+      <div className="myGamesList">
+        {games.map((game) => {
+          return (
+            <div className="myGameInfoContainer">
+              <ListGroup>
+                <ListGroup.Item>
+                  <div className="myGameInfo">
+                    <p>
+                      <b>Id:</b> {game.roomId}
+                    </p>
+                    <p>
+                      <b>White:</b> {game.white}
+                    </p>
+                    <p>
+                      <b>Black:</b> {game.black ? game.black : "N/A"}
+                    </p>
+                    <p>
+                      <b>Moves:</b> {game.movetext}
+                    </p>
+                  </div>
+                </ListGroup.Item>
+              </ListGroup>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

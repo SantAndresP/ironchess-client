@@ -1,3 +1,10 @@
+.myProfile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .myGameInfoContainer {
   display: flex;
   justify-content: center;
