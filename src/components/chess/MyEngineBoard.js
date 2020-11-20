@@ -9,7 +9,6 @@ import MyMoves from "./MyMoves";
 
 // Styles.
 import "../../styles/MyBoard.css";
-import { Button } from "react-bootstrap";
 
 const boardStyle = {
   borderRadius: "5px",
@@ -49,7 +48,6 @@ class HumanVsStockfish extends Component {
   }
 
   onDrop = ({ sourceSquare, targetSquare }) => {
-    // see if the move is legal
     const move = game.move({
       from: sourceSquare,
       to: targetSquare,

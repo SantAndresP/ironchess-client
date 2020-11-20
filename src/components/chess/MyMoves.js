@@ -1,11 +1,13 @@
+/*    Table of moves component.    */
+
 // Setup.
 import React from "react";
-import { ListGroup } from "react-bootstrap";
 
 // Styles.
+import { ListGroup } from "react-bootstrap";
 import "../../styles/MyMoves.css";
 
-// Rendering function.
+// Main function.
 function MyMoves(props) {
   return (
     <ListGroup className="myListGroup">

@@ -10,7 +10,7 @@ import { URL } from "../../config";
 
 // Styles.
 import "../../styles/MyBoard.css";
-import { Button, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 
 // Variables.
 let roomId;
@@ -56,8 +56,6 @@ function HumanVsHuman(props) {
   // componentDidUpdate.
   useEffect(() => {
     socket.on("receive_info", (data) => {
-      console.log("Information received.", data);
-
       setFen(data.position);
       setMovesPGN(data.moves);
       setTurn(data.turn);
@@ -179,6 +177,7 @@ function HumanVsHuman(props) {
   });
 }
 
+// Main function.
 function MyHumanBoard(props) {
   return (
     <HumanVsHuman {...props}>

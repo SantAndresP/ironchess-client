@@ -1,4 +1,4 @@
-/*    Public profile.    */
+/*    Private profile.    */
 
 // Setup.
 import React, { useEffect, useState } from "react";

@@ -1,10 +1,13 @@
 /*    Sign in.    */
-import React, { useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
 
+// Setup.
+import React, { useEffect } from "react";
+
+// Styles.
+import { Button, Form } from "react-bootstrap";
 import "../../styles/Auth.css";
 
-// Rendering function.
+// Main function.
 function Signin(props) {
   useEffect(() => {
     return props.onUnmount;

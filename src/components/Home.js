@@ -1,5 +1,6 @@
-/*      Home.     */
+/*    Home.    */
 
+// Setup.
 import React from "react";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -8,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "react-bootstrap";
 import "../styles/Home.css";
 
-// Rendering function.
+// Main function.
 function Home(props) {
   let color = "w";
 

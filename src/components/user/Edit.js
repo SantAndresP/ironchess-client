@@ -1,8 +1,13 @@
-import React from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+/*    Edit profile.    */
 
+// Setup.
+import React from "react";
+
+// Styles.
+import { Button, Form, Spinner } from "react-bootstrap";
 import "../../styles/Auth.css";
 
+// Main function.
 function Edit(props) {
   // Loading spinner.
   if (!props.loggedUser) {

@@ -1,8 +1,12 @@
 /*    Sign up.    */
+
+// Setup.
 import React from "react";
+
+// Styles.
 import { Alert, Button, Form } from "react-bootstrap";
 
-// Rendering function.
+// Main function.
 function Signup(props) {
   return (
     <div className="myFormContainer">

@@ -1,11 +1,12 @@
 /*    ChatBox component.    */
 
-//Setup.
+// Setup.
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "../styles/ChatBox.css";
-
 import { URL } from "../config";
+
+// Styles.
 import {
   Button,
   Card,
@@ -37,11 +38,13 @@ function ChatBox(props) {
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
+  // componentDidMount.
   useEffect(() => {
     socket = io(CONNECTION_PORT);
     socket.emit("join_room", room);
   }, [CONNECTION_PORT]);
 
+  // componentDidUpdate.
   useEffect(() => {
     socket.on("receive_message", (data) => {
       setMessageList([...messageList, data]);
