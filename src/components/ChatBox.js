@@ -1,4 +1,4 @@
-/* ChatBox component. */
+/*    ChatBox component.    */
 
 //Setup.
 import React, { useState, useEffect } from "react";
@@ -9,19 +9,25 @@ import { URL } from "../config";
 import {
   Button,
   Card,
-  Form,
   FormControl,
   InputGroup,
   ListGroup,
+  Spinner,
 } from "react-bootstrap";
+
+// Socket.IO setup.
 let socket;
 const CONNECTION_PORT = `${URL}`;
 
 // Main function.
 function ChatBox(props) {
+  // Loading spinner.
   if (!props.loggedUser) {
-    // TODO: add loading screen.
-    return null;
+    return (
+      <Spinner animation="border" role="status" variant="light">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
   }
 
   const room = props.match.params.id;

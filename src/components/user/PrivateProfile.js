@@ -1,11 +1,16 @@
+/*    Public profile.    */
+
+// Setup.
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Spinner, Card, ListGroup, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { API_URL } from "../../config";
 
+// Styles.
+import { Spinner, Card, ListGroup, Button } from "react-bootstrap";
 import "../../styles/Profile.css";
-import { Link } from "react-router-dom";
 
+// Main function.
 function PrivateProfile(props) {
   const [games, setGames] = useState([]);
 
