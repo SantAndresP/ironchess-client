@@ -1,3 +1,6 @@
+/* ChatBox component. */
+
+//Setup.
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "../styles/ChatBox.css";
@@ -14,16 +17,17 @@ import {
 let socket;
 const CONNECTION_PORT = `${URL}`;
 
+// Main function.
 function ChatBox(props) {
   if (!props.loggedUser) {
-    //show loading screen or
+    // TODO: add loading screen.
     return null;
   }
 
   const room = props.match.params.id;
   const userName = props.loggedUser.username;
 
-  // After Login
+  // After login.
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
