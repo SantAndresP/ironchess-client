@@ -7,6 +7,7 @@ import MyEngineBoard from "./chess/MyEngineBoard";
 import MyHumanBoard from "./chess/MyHumanBoard";
 
 // Styles.
+import { Spinner } from "react-bootstrap";
 import "../styles/Game.css";
 
 // Main function.

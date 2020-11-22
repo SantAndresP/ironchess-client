@@ -1,8 +1,7 @@
 /*    Human vs. Stockfish    */
 
 // Setup.
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
 import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
 import MyMoves from "./MyMoves";
@@ -10,79 +9,66 @@ import MyMoves from "./MyMoves";
 // Styles.
 import "../../styles/MyBoard.css";
 
-const boardStyle = {
-  borderRadius: "5px",
-  boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
-};
-
+// Variables.
+let game;
 const STOCKFISH = window.STOCKFISH;
 
-// Initialising game.
-const game = new Chess();
+function HumanVsStockfish(props) {
+  // Hooks.
+  const [fen, setFen] = useState("start");
+  const [history, setHistory] = useState([]);
+  const [moves, setMoves] = useState("");
+  const [turn, setTurn] = useState("");
 
-class HumanVsStockfish extends Component {
-  static propTypes = { children: PropTypes.func };
+  // componentDidMount.
+  useEffect(() => {
+    game = Chess();
+    setFen(game.fen());
 
-  state = {
-    // Starting position.
-    fen: "start",
-    // Array of past game moves.
-    history: [],
-    // Moves in PNG format.
-    moves: "",
-    // Turn.
-    turn: "",
-  };
+    engineGame().prepareMove();
+  }, []);
 
-  componentDidMount() {
-    this.setState({
-      fen: game.fen(),
-    });
+  // componentDidUpdate.
+  useEffect(() => {
+    setMoves(game.pgn());
+    setTurn(game.turn());
+  });
 
-    this.engineGame().prepareMove();
-  }
-
-  componentDidUpdate() {
-    this.moves = game.pgn();
-    this.turn = game.turn();
-  }
-
-  onDrop = ({ sourceSquare, targetSquare }) => {
+  const handleDrop = ({ sourceSquare, targetSquare }) => {
     const move = game.move({
       from: sourceSquare,
       to: targetSquare,
       promotion: "q",
     });
 
-    // Illegal move
+    // Checks if move is illegal.
     if (move === null) return;
 
     return new Promise((resolve) => {
-      this.setState({ fen: game.fen() });
+      setFen(game.fen());
       resolve();
-    }).then(() => this.engineGame().prepareMove());
+    }).then(() => engineGame().prepareMove());
   };
 
-  engineGame = (options) => {
+  // The whole engine configuration lies down here.
+  const engineGame = (options) => {
     options = options || {};
 
-    /// We can load Stockfish via Web Workers or via STOCKFISH() if loaded from a <script> tag.
     let engine =
       typeof STOCKFISH === "function"
         ? STOCKFISH()
         : new Worker(options.stockfishjs || "stockfish.js");
+
     let evaler =
       typeof STOCKFISH === "function"
         ? STOCKFISH()
         : new Worker(options.stockfishjs || "stockfish.js");
+
     let engineStatus = {};
     let time = { wtime: 3000, btime: 3000, winc: 1500, binc: 1500 };
-    let playerColor = "black";
+    let playerColor = "black"; // The engine is always white.
     let clockTimeoutID = null;
-    // let isEngineRunning = false;
     let announced_game_over;
-    // do not pick up pieces if the game is over
-    // only pick up pieces for White
 
     setInterval(function () {
       if (announced_game_over) {
@@ -95,8 +81,6 @@ class HumanVsStockfish extends Component {
     }, 500);
 
     function uciCmd(cmd, which) {
-      // console.log('UCI: ' + cmd);
-
       (which || engine).postMessage(cmd);
     }
     uciCmd("uci");
@@ -227,7 +211,7 @@ class HumanVsStockfish extends Component {
         if (match) {
           // isEngineRunning = false;
           game.move({ from: match[1], to: match[2], promotion: match[3] });
-          this.setState({ fen: game.fen() });
+          setFen(game.fen());
           prepareMove();
           uciCmd("eval", evaler);
           //uciCmd("eval");
@@ -276,30 +260,31 @@ class HumanVsStockfish extends Component {
     };
   };
 
-  render() {
-    const { fen } = this.state;
-    return this.props.children({
-      position: fen,
-      onDrop: this.onDrop,
-      moves: this.moves,
-      turn: this.turn,
-    });
-  }
+  return props.children({
+    position: fen,
+    handleDrop,
+    moves,
+    turn,
+  });
 }
 
-function MyEngineBoard() {
+// Main function.
+function MyEngineBoard(props) {
   return (
     <div className="myGamespace">
-      <HumanVsStockfish>
-        {({ position, onDrop, moves, turn }) => (
+      <HumanVsStockfish {...props}>
+        {({ position, handleDrop, moves, turn }) => (
           <div className="myChessboard">
             <Chessboard
               id="stockfish"
               position={position}
               width={550}
-              onDrop={onDrop}
-              boardStyle={boardStyle}
+              onDrop={handleDrop}
               orientation="black"
+              boardStyle={{
+                borderRadius: "5px",
+                boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
+              }}
             />
 
             <MyMoves moves={moves} turn={turn}></MyMoves>
