@@ -1,3 +1,5 @@
+/*    App.    */
+
 // Setup.
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -11,11 +13,12 @@ import Signin from "./auth/Signin";
 import Signup from "./auth/Signup";
 import Game from "./Game";
 import PrivateProfile from "./user/PrivateProfile";
-
-import "../styles/App.css";
 import Edit from "./user/Edit";
 
-/* ---------- App. ---------- */
+// Styles
+import "../styles/App.css";
+
+// Main function.
 function App(props) {
   const [loggedUser, setLoggedUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -152,7 +155,14 @@ function App(props) {
           <Route
             path="/signup"
             render={(routeProps) => {
-              return <Signup onSignup={handleSignup} {...routeProps} />;
+              return (
+                <Signup
+                  onUnmount={handleUnmount}
+                  errorMsg={errorMsg}
+                  onSignup={handleSignup}
+                  {...routeProps}
+                />
+              );
             }}
           />
 

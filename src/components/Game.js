@@ -11,9 +11,13 @@ import "../styles/Game.css";
 
 // Main function.
 function Game(props) {
+  // Loading spinner.
   if (!props.loggedUser) {
-    //show loading screen or
-    return null;
+    return (
+      <Spinner animation="border" role="status" variant="light">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
   }
 
   return props.match.path === "/stockfish" ? (
