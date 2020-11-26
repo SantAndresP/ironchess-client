@@ -8,7 +8,7 @@ import App from "./components/App";
 
 // Styles.
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
+import "./styles/index.css";
 
 // Rendering function.
 ReactDOM.render(
