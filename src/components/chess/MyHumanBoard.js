@@ -141,7 +141,7 @@ function HumanVsHuman(props) {
 
   const handleMouseOutSquare = (square) => removeHighlightSquare(square);
 
-  // Central squares get diferents `dropSquareStyles`.
+  // Central squares get diferent `dropSquareStyles`.
   const handleDragOverSquare = (square) => {
     setDropSquareStyle(
       square === "e4" || square === "d4" || square === "e5" || square === "d5"
